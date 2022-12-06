@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+  postgres:
+    image: 'postgres:latest'
+    environment:
+      - POSTGRES_PASSWORD=POSTGRES_PASSWORD
+  
+  redis:
+    image: 'redis:latest'
+
+  api:
+    build:
+      dockerfile: Dockerfile.dev
+      # The "context: ./server" tells docker-compose where to find the Dockerfile.dev file to use
+      context: ./server
+    volumes:
+      # This tells docker-compose not to overright this folder
+      - /app/node_modules
+      # This tells docker-compose to copy everything in the server directory into /app of the container
+      # This automatically updates whatever changes are made to the ./server folder in the /app in the container
+      - ./server:/app
+    environment: 
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - PGUSER=postgres
+      - PGHOST=postgres
+      - PGDATABASE=postgres
+      - PGPASSWORD=POSTGRES_PASSWORD
+      - PGPORT=5432
+
+  client:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./client
+    volumes:
+      - /app/node_modules
+      - ./client:/app
+
+  worker:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./worker
+    volumes:
+      - /app/node_modules
+      - ./worker:/app
