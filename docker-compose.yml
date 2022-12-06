@@ -44,3 +44,11 @@ services:
     volumes:
       - /app/node_modules
       - ./worker:/app
+
+  nginx:
+    restart: always
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./nginx
+    ports:
+      - '3000:80'
