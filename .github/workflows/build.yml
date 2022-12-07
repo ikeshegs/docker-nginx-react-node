@@ -25,3 +25,6 @@ jobs:
 
       - name: Run test
         run: docker run ikeshegs/test-app npm test -- --coverage
+
+      - name: Success!
+        run: echo App successfully tested
