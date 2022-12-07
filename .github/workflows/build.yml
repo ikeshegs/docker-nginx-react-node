@@ -25,5 +25,5 @@ jobs:
 
       - name: Run test
         run: |
-          docker run ikeshegs/test-app npm test
+          docker run ikeshegs/test-app npm test -- --coverage
           echo DONE
