@@ -23,7 +23,27 @@ jobs:
       - name: Build Test App
         run: docker build -t ikeshegs/test-app -f ./client/Dockerfile.dev ./client
 
-      - name: Run test
+      # - name: Run test
+      #   run: |
+      #     docker run ikeshegs/test-app npm test -- --coverage
+      #     echo DONE
+
+      - name: Build App for Production
         run: |
-          docker run ikeshegs/test-app npm test -- --coverage
-          echo DONE
+          docker build -t ikeshegs/multi-client ./client
+          docker build -t ikeshegs/multi-nginx ./nginx
+          docker build -t ikeshegs/multi-server ./server
+          docker build -t ikeshegs/multi-worker ./worker
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_ID }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Push build to Docker Hub
+        run: |
+          docker push ikeshegs/multi-client
+          docker push ikeshegs/multi-nginx
+          docker push ikeshegs/multi-server
+          docker push ikeshegs/multi-worker
