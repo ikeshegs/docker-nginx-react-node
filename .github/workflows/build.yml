@@ -1,0 +1,27 @@
+name: multi-docker-app
+
+on: 
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build: 
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Test App
+        run: docker build -t ikeshegs/test-app -f ./client/Dockerfile.dev ./client
+
+      - name: Run test
+        run: docker run ikeshegs/test-app npm test -- --coverage
