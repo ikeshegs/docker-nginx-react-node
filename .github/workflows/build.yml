@@ -24,7 +24,7 @@ jobs:
         run: docker build -t ikeshegs/test-app -f ./client/Dockerfile.dev ./client
 
       - name: Run test
-        run: docker run ikeshegs/test-app npm test -- --coverage
+        run: docker run ikeshegs/test-app -f ./src/App.test.js
 
       - name: Build App for Production
         run: |
